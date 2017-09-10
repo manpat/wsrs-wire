@@ -1,0 +1,30 @@
+Flat grid based world
+	or voxel based kinda?
+
+first person
+
+core/goals?
+	build a base - why?
+
+	teleport to other players bases?
+
+	environment control/life support?
+
+
+different interaction modes:
+	- build mode
+		- carve out / build walls
+	- place mode
+		- place/remove entities
+		- doors
+		- tech
+	- wire mode
+		- connect/disconnect tech		
+		- see connections
+	- regular mode
+		- pew guns
+		- can interact with tech
+
+
+base building
+	mesh building

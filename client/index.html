@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no' />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+
+		<meta name="theme-color" content="#333">
+		<meta name="msapplication-navbutton-color" content="#333">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#333">
+
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			html, body {
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+			}
+
+			canvas {
+				overflow: hidden;
+				display: block;
+			}
+
+			#downloadcanvas {
+				display: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<canvas id="canvas"></canvas>
+		<canvas id="downloadcanvas"></canvas>
+		<script src="wsclient.js"></script>
+	</body>
+</html>
