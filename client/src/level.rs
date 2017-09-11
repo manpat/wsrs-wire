@@ -89,18 +89,20 @@ impl LevelGeometry {
 
 		let mut mb = MeshBuilder::new();
 
+		let color = Color::grey(0.6);
+
 		mb.add_quad(&[
-			Vertex::new_col(Vec3::new( 0.0, 0.0, 0.0) * scalar, Color::grey(0.5), Vec2::new(-1.0, 1.0)),
-			Vertex::new_col(Vec3::new( 0.0, 0.0,32.0) * scalar, Color::grey(0.5), Vec2::new(-1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 0.0,32.0) * scalar, Color::grey(0.5), Vec2::new( 1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 0.0, 0.0) * scalar, Color::grey(0.5), Vec2::new( 1.0, 1.0)),
+			Vertex::new_col(Vec3::new( 0.0, 0.0, 0.0) * scalar, color, Vec2::new(-1.0, 1.0)),
+			Vertex::new_col(Vec3::new( 0.0, 0.0,32.0) * scalar, color, Vec2::new(-1.0,-1.0)),
+			Vertex::new_col(Vec3::new(32.0, 0.0,32.0) * scalar, color, Vec2::new( 1.0,-1.0)),
+			Vertex::new_col(Vec3::new(32.0, 0.0, 0.0) * scalar, color, Vec2::new( 1.0, 1.0)),
 		]);
 
 		mb.add_quad(&[
-			Vertex::new_col(Vec3::new( 0.0, 1.0, 0.0) * scalar, Color::grey(0.5), Vec2::new(-1.0, 1.0)),
-			Vertex::new_col(Vec3::new( 0.0, 1.0,32.0) * scalar, Color::grey(0.5), Vec2::new(-1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 1.0,32.0) * scalar, Color::grey(0.5), Vec2::new( 1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 1.0, 0.0) * scalar, Color::grey(0.5), Vec2::new( 1.0, 1.0)),
+			Vertex::new_col(Vec3::new( 0.0, 1.0, 0.0) * scalar, color, Vec2::new(-1.0, 1.0)),
+			Vertex::new_col(Vec3::new( 0.0, 1.0,32.0) * scalar, color, Vec2::new(-1.0,-1.0)),
+			Vertex::new_col(Vec3::new(32.0, 1.0,32.0) * scalar, color, Vec2::new( 1.0,-1.0)),
+			Vertex::new_col(Vec3::new(32.0, 1.0, 0.0) * scalar, color, Vec2::new( 1.0, 1.0)),
 		]);
 
 		let fwd = Vec2i::new(0,-1);

@@ -41,8 +41,8 @@ fn main() {
 	println!("Is Hosted:      {}", cfg!(hosted));
 	println!("Public address: {}", env!("PUBLIC_ADDRESS"));
 
-	let listener = TcpListener::bind("0.0.0.0:9001").unwrap();
-	let fs_listener = TcpListener::bind("0.0.0.0:8000").unwrap();
+	let listener = TcpListener::bind("0.0.0.0:1337").unwrap();
+	let fs_listener = TcpListener::bind("0.0.0.0:8080").unwrap();
 
 	thread::spawn(move || fileserver::start(fs_listener));
 

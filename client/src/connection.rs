@@ -83,7 +83,7 @@ impl Connection {
 			let host_address = env!("PUBLIC_ADDRESS");
 			let chost_address = CString::new(host_address).unwrap();
 
-			let gairet = getaddrinfo(chost_address.as_bytes_with_nul().as_ptr(), "9001\0".as_ptr(), &hint, &mut addresses);
+			let gairet = getaddrinfo(chost_address.as_bytes_with_nul().as_ptr(), "1337\0".as_ptr(), &hint, &mut addresses);
 			if gairet < 0 {
 				// let error = gai_strerror(gairet);
 				// let error = std::str::from_utf8(&error);

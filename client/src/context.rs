@@ -104,7 +104,8 @@ impl MainContext {
 
 		use input::Button;
 
-		if self.input_state.is_button_pressed(Button::Escape) {
+		if self.input_state.is_button_pressed(Button::Escape)
+		|| self.input_state.is_mouse_captured() && self.input_state.is_button_pressed(Button::LeftMouse) {
 			use ems;
 			ems::activate_pointer_lock();
 		}
@@ -142,7 +143,7 @@ impl MainContext {
 		}
 
 		if let Some(cell) = self.selected_cell {
-			if self.input_state.is_button_pressed(Button::LeftMouse) {
+			if self.input_state.is_mouse_captured() && self.input_state.is_button_pressed(Button::LeftMouse) {
 				let state = self.level.get_wall_cell(cell);
 				self.level.set_wall_cell(cell, !state);
 			}
