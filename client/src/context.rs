@@ -1,5 +1,5 @@
 use std::time;
-use rendering::{gl, CanvasContext, Shader};
+use rendering::{gl, CanvasContext, Shader, Texture};
 use rendering::types::*;
 use rendering::mesh_builder::{MeshBuilder, Vertex, Mesh};
 use connection::Connection;
@@ -32,6 +32,8 @@ pub struct MainContext {
 
 	level: Level,
 	level_geom: LevelGeometry,
+
+	white_tex: Texture,
 } 
 
 impl MainContext {
@@ -43,6 +45,15 @@ impl MainContext {
 
 		let mut connection = Connection::new();
 		connection.attempt_connect();
+
+		let mut player = Player::new();
+		player.pos = Vec2::splat(4.5 * ::level::TILE_SIZE);
+
+		let mut level = Level::new();
+		level.set_wall_cell(Vec2i::splat(4), true);
+		level.set_wall_cell(Vec2i::splat(5), true);
+		level.set_wall_cell(Vec2i::new(4, 5), true);
+		level.set_wall_cell(Vec2i::new(5, 4), true);
 
 		MainContext {
 			connection,
@@ -64,12 +75,14 @@ impl MainContext {
 				mesh
 			},
 
-			player: Player::new(),
+			player,
 			selector_mesh: Mesh::new(),
 			selected_cell: None,
 
-			level: Level::new(),
+			level,
 			level_geom: LevelGeometry::new(),
+
+			white_tex: Texture::from_1d(&[Color::white()]),
 		}
 	}
 
@@ -105,7 +118,7 @@ impl MainContext {
 		use input::Button;
 
 		if self.input_state.is_button_pressed(Button::Escape)
-		|| self.input_state.is_mouse_captured() && self.input_state.is_button_pressed(Button::LeftMouse) {
+		|| !self.input_state.is_mouse_captured() && self.input_state.is_button_pressed(Button::LeftMouse) {
 			use ems;
 			ems::activate_pointer_lock();
 		}
@@ -202,23 +215,33 @@ impl MainContext {
 		unsafe {
 			self.shader.use_program();
 
-			let view = Mat4::xrot(-self.player.pitch)
-				* Mat4::yrot(-self.player.yaw)
-				* Mat4::translate(-self.player.pos.to_x0z() - Vec3::new(0.0, 1.2, 0.0));
+			let player_head_off = Vec3::new(0.0, 1.2, 0.0);
 
-			let view_proj = Mat4::perspective(PI/3.0, vp.get_aspect(), 0.01, 10.0) * view;
+			let view = Mat4::ident()
+				* Mat4::translate(-Vec3::new(0.0, 0.0,-0.62)) // TODO: Figure out why camera feels wrong without this
+				* Mat4::xrot(-self.player.pitch)
+				* Mat4::yrot(-self.player.yaw)
+				* Mat4::translate(-self.player.pos.to_x0z() - player_head_off);
+
+			let view_proj = Mat4::perspective(PI/3.0, vp.get_aspect(), 0.005, 100.0) * view;
 			self.shader.set_proj(&view_proj);
+			self.shader.set_uniform_i32("u_texture", 0);
 
 			gl::EnableVertexAttribArray(0);
 			gl::EnableVertexAttribArray(1);
 			gl::EnableVertexAttribArray(2);
 
+			self.level_geom.level_texture.bind_to_slot(0);
+
 			self.level_geom.mesh.bind();
 			self.level_geom.mesh.draw(gl::TRIANGLES);
 
+			// Bind 'nothing'
+			self.white_tex.bind_to_slot(0);
+
 			if self.selected_cell.is_some() {
 				self.selector_mesh.bind();
-				self.selector_mesh.draw(gl::POINTS);
+				self.selector_mesh.draw(gl::LINES);
 			}
 
 			self.shader.set_proj(&Mat4::ident());

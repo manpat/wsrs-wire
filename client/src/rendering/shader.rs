@@ -29,7 +29,7 @@ impl Shader {
 				if status == 0 {
 					let mut buf = [0u8; 1024];
 					let mut len = 0i32;
-					gl::GetShaderInfoLog(sh, buf.len() as i32, &mut len, buf.as_mut_ptr());
+					gl::GetShaderInfoLog(sh, buf.len() as i32, &mut len, buf.as_mut_ptr() as _);
 
 					println!("{}", CStr::from_bytes_with_nul_unchecked(&buf[..len as usize]).to_str().unwrap());
 				}
@@ -46,8 +46,8 @@ impl Shader {
 			Shader {
 				gl_handle: program,
 
-				proj_loc: gl::GetUniformLocation(program, b"proj\0".as_ptr()),
-				view_loc: gl::GetUniformLocation(program, b"view\0".as_ptr()),
+				proj_loc: gl::GetUniformLocation(program, b"proj\0".as_ptr() as _),
+				view_loc: gl::GetUniformLocation(program, b"view\0".as_ptr() as _),
 			}
 		}
 	}

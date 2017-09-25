@@ -1,9 +1,10 @@
 use common::math::*;
 use rendering::mesh_builder::{Mesh, MeshBuilder};
+use rendering::texture::*;
 
-const LEVEL_SIZE: usize = 32;
-const TILE_SIZE: f32 = 1.5;
-const TILE_HEIGHT: f32 = 2.0;
+pub const LEVEL_SIZE: usize = 32;
+pub const TILE_SIZE: f32 = 1.5;
+pub const TILE_HEIGHT: f32 = 3.0 / 2.0 * TILE_SIZE;
 
 pub struct Level {
 	pub wall_layout: [bool; LEVEL_SIZE * LEVEL_SIZE],
@@ -72,12 +73,14 @@ impl Level {
 
 pub struct LevelGeometry {
 	pub mesh: Mesh,
+	pub level_texture: Texture,
 }
 
 impl LevelGeometry {
 	pub fn new() -> Self {
 		LevelGeometry {
 			mesh: Mesh::new(),
+			level_texture: Texture::from_png(::res::LEVEL_SPRITE_SHEET),
 		}
 	}
 
@@ -89,24 +92,12 @@ impl LevelGeometry {
 
 		let mut mb = MeshBuilder::new();
 
-		let color = Color::grey(0.6);
-
-		mb.add_quad(&[
-			Vertex::new_col(Vec3::new( 0.0, 0.0, 0.0) * scalar, color, Vec2::new(-1.0, 1.0)),
-			Vertex::new_col(Vec3::new( 0.0, 0.0,32.0) * scalar, color, Vec2::new(-1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 0.0,32.0) * scalar, color, Vec2::new( 1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 0.0, 0.0) * scalar, color, Vec2::new( 1.0, 1.0)),
-		]);
-
-		mb.add_quad(&[
-			Vertex::new_col(Vec3::new( 0.0, 1.0, 0.0) * scalar, color, Vec2::new(-1.0, 1.0)),
-			Vertex::new_col(Vec3::new( 0.0, 1.0,32.0) * scalar, color, Vec2::new(-1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 1.0,32.0) * scalar, color, Vec2::new( 1.0,-1.0)),
-			Vertex::new_col(Vec3::new(32.0, 1.0, 0.0) * scalar, color, Vec2::new( 1.0, 1.0)),
-		]);
-
 		let fwd = Vec2i::new(0,-1);
 		let right = Vec2i::new(1, 0);
+
+		let uv_x = Vec2::new(1.5/4.0 - 0.004, 0.0);
+		let uv_y = Vec2::new(0.0, 2.0/4.0 - 0.001);
+		let uv_0 = Vec2::zero();
 
 		for y in 0..LEVEL_SIZE as i32 {
 			for x in 0..LEVEL_SIZE as i32 {
@@ -115,39 +106,56 @@ impl LevelGeometry {
 
 				if !level.get_wall_cell(pos) { continue }
 
+				// Floor
+				let uv_m = 0.004;
+				mb.add_quad(&[
+					Vertex::new(center + scalar * Vec3::new(-0.5, 0.0, 0.5), Vec2::new(3.0/4.0-uv_m, 1.5/4.0-uv_m)),
+					Vertex::new(center + scalar * Vec3::new(-0.5, 0.0,-0.5), Vec2::new(3.0/4.0-uv_m, 0.0)),
+					Vertex::new(center + scalar * Vec3::new( 0.5, 0.0,-0.5), Vec2::new(1.5/4.0+uv_m, 0.0)),
+					Vertex::new(center + scalar * Vec3::new( 0.5, 0.0, 0.5), Vec2::new(1.5/4.0+uv_m, 1.5/4.0-uv_m)),
+				]);
+
+				// Ceil
+				mb.add_quad(&[
+					Vertex::new(center + scalar * Vec3::new(-0.5, 1.0, 0.5), Vec2::new(3.0/4.0-uv_m, 3.0/4.0-uv_m)),
+					Vertex::new(center + scalar * Vec3::new( 0.5, 1.0, 0.5), Vec2::new(1.5/4.0+uv_m, 3.0/4.0-uv_m)),
+					Vertex::new(center + scalar * Vec3::new( 0.5, 1.0,-0.5), Vec2::new(1.5/4.0+uv_m, 1.5/4.0+uv_m)),
+					Vertex::new(center + scalar * Vec3::new(-0.5, 1.0,-0.5), Vec2::new(3.0/4.0-uv_m, 1.5/4.0+uv_m)),
+				]);
+
 				if !level.get_wall_cell(pos + fwd) {
 					mb.add_quad(&[
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 0.0,-0.5), Color::grey(0.6), Vec2::new(-1.0, 1.0)),
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 1.0,-0.5), Color::grey(0.7), Vec2::new(-1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 1.0,-0.5), Color::grey(0.7), Vec2::new( 1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 0.0,-0.5), Color::grey(0.6), Vec2::new( 1.0, 1.0)),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 0.0,-0.5), uv_x + uv_y),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 1.0,-0.5), uv_x),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 1.0,-0.5), uv_0),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 0.0,-0.5), uv_y),
 					]);
 				}
 
 				if !level.get_wall_cell(pos - fwd) {
 					mb.add_quad(&[
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 0.0, 0.5), Color::grey(0.6), Vec2::new(-1.0, 1.0)),
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 1.0, 0.5), Color::grey(0.7), Vec2::new(-1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 1.0, 0.5), Color::grey(0.7), Vec2::new( 1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 0.0, 0.5), Color::grey(0.6), Vec2::new( 1.0, 1.0)),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 0.0, 0.5), uv_y),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 1.0, 0.5), uv_0),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 1.0, 0.5), uv_x),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 0.0, 0.5), uv_x + uv_y),
 					]);
 				}
 
 				if !level.get_wall_cell(pos + right) {
 					mb.add_quad(&[
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 0.0, 0.5), Color::grey(0.6), Vec2::new(-1.0, 1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 1.0, 0.5), Color::grey(0.7), Vec2::new(-1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 1.0,-0.5), Color::grey(0.7), Vec2::new( 1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new( 0.5, 0.0,-0.5), Color::grey(0.6), Vec2::new( 1.0, 1.0)),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 0.0, 0.5), uv_y),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 1.0, 0.5), uv_0),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 1.0,-0.5), uv_x),
+						Vertex::new(center + scalar * Vec3::new( 0.5, 0.0,-0.5), uv_x + uv_y),
 					]);
 				}
 
 				if !level.get_wall_cell(pos - right) {
 					mb.add_quad(&[
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 0.0, 0.5), Color::grey(0.6), Vec2::new(-1.0, 1.0)),
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 1.0, 0.5), Color::grey(0.7), Vec2::new(-1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 1.0,-0.5), Color::grey(0.7), Vec2::new( 1.0,-1.0)),
-						Vertex::new_col(center + scalar * Vec3::new(-0.5, 0.0,-0.5), Color::grey(0.6), Vec2::new( 1.0, 1.0)),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 0.0, 0.5), uv_x + uv_y),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 1.0, 0.5), uv_x),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 1.0,-0.5), uv_0),
+						Vertex::new(center + scalar * Vec3::new(-0.5, 0.0,-0.5), uv_y),
 					]);
 				}
 			}

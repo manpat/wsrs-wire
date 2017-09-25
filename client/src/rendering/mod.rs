@@ -27,6 +27,7 @@ pub mod mesh_builder;
 
 pub use self::types::*;
 pub use self::shader::*;
+pub use self::texture::*;
 
 pub struct CanvasContext {
 	ems_context_handle: ems::EmWebGLContext,

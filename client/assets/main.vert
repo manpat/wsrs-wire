@@ -10,8 +10,7 @@ varying vec2 v_uv;
 
 void main() {
 	vec4 world_pos = vec4(position, 1.0);
-	gl_Position = proj * world_pos;
-	// gl_Position = vec4(position, 1.0);
+	gl_Position = proj * world_pos + vec4(0.0, 0.0, 0.5, 0.0); // TODO: Don't
 	gl_PointSize = 5.0;
 
 	v_color = color;

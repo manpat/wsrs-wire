@@ -8,6 +8,8 @@
 extern crate common;
 extern crate libc;
 
+extern crate png;
+
 mod resources;
 
 #[macro_use]
@@ -23,6 +25,10 @@ mod player;
 mod level;
 
 use context::*;
+
+pub mod res {
+	pub use resources::*;
+}
 
 fn main() {
 	println!("Is Hosted:      {}", cfg!(hosted));

@@ -28,3 +28,51 @@ different interaction modes:
 
 base building
 	mesh building
+
+
+
+todo
+----
+
+fix the mf camera
+
+input
+	plan control scheme
+
+	plan mobile fps controls
+	implement mobile fps controls
+
+physics
+	add player-level collision
+	add player-entity collision
+
+	implement raycasting for entities
+
+tools
+	some representation of tools
+	ui for tool selection
+
+	build tool
+		separate out into tool
+
+	place mode
+		add representation of entities to level
+		ui for entity selection
+
+	wire mode
+
+rendering
+	entity rendering
+		mesh builder
+			distinction between static/dynamic parts?
+			easy bilboards
+
+	particles - low prio
+
+	text rendering probably
+		worldspace
+		screenspace
+
+	ui
+		ui builder
+

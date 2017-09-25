@@ -128,7 +128,7 @@ extern {
 	pub fn emscripten_asm_const_int(s: *const u8, ...) -> i32;
 
 	pub fn emscripten_webgl_init_context_attributes(attribs: *mut EmscriptenWebGLContextAttributes);
-	pub fn emscripten_webgl_create_context(target: *const u8, attribs: *const EmscriptenWebGLContextAttributes) -> EmWebGLContext;
+	pub fn emscripten_webgl_create_context(target: *const i8, attribs: *const EmscriptenWebGLContextAttributes) -> EmWebGLContext;
 	pub fn emscripten_webgl_make_context_current(context: EmWebGLContext) -> i32;
 	pub fn emscripten_webgl_destroy_context(context: EmWebGLContext) -> i32;
 	pub fn emscripten_webgl_get_current_context() -> EmWebGLContext;

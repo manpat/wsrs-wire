@@ -80,9 +80,9 @@ impl Vec4 {
 }
 
 impl Vec2i {
-	pub fn new(x: i32, y: i32) -> Vec2i { Vec2i{x, y} }
-	pub fn splat(x: i32) -> Vec2i { Vec2i::new(x, x) }
-	pub fn zero() -> Vec2i { Vec2i::splat(0) }
+	pub const fn new(x: i32, y: i32) -> Vec2i { Vec2i{x, y} }
+	pub const fn splat(x: i32) -> Vec2i { Vec2i::new(x, x) }
+	pub const fn zero() -> Vec2i { Vec2i::splat(0) }
 
 	pub fn from_tuple(t: (i32,i32)) -> Vec2i { Vec2i::new(t.0, t.1) }
 	pub fn to_tuple(self) -> (i32,i32) { (self.x, self.y) }
