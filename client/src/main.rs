@@ -3,6 +3,7 @@
 #![feature(box_syntax)]
 #![feature(ord_max_min)]
 #![feature(ascii_ctype)]
+#![feature(inclusive_range_syntax)]
 
 #[macro_use]
 extern crate common;

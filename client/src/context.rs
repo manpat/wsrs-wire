@@ -47,13 +47,15 @@ impl MainContext {
 		connection.attempt_connect();
 
 		let mut player = Player::new();
-		player.pos = Vec2::splat(4.5 * ::level::TILE_SIZE);
+		player.pos = Vec2::splat(16.5 * ::level::TILE_SIZE);
+		player.yaw = PI;
 
 		let mut level = Level::new();
-		level.set_wall_cell(Vec2i::splat(4), true);
-		level.set_wall_cell(Vec2i::splat(5), true);
-		level.set_wall_cell(Vec2i::new(4, 5), true);
-		level.set_wall_cell(Vec2i::new(5, 4), true);
+		for y in 15...17 {
+			level.set_wall_cell(Vec2i::new(15, y), true);
+			level.set_wall_cell(Vec2i::new(16, y), true);
+			level.set_wall_cell(Vec2i::new(17, y), true);
+		}
 
 		MainContext {
 			connection,
