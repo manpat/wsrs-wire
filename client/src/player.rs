@@ -39,7 +39,7 @@ impl Player {
 			Vec2i::new( 0, 1),
 		];
 
-		let player_cell_center = Vec2::new(cell.x.floor() + 0.5, cell.y.floor() + 0.5);
+		let player_cell_center = Vec2::new(player_cell.x.floor() + 0.5, player_cell.y.floor() + 0.5);
 
 		for &off in offsets.iter() {
 			let check_cell = player_cell.to_vec2i() + off;
