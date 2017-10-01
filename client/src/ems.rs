@@ -210,7 +210,7 @@ pub fn activate_pointer_lock() {
 }
 
 extern fn on_update(ud: *mut u8) {
-	let mut ctx: &mut MainContext = unsafe{ transmute(ud) };
+	let ctx: &mut MainContext = unsafe{ transmute(ud) };
 
 	ctx.process_packets();
 	ctx.on_update();
@@ -218,7 +218,7 @@ extern fn on_update(ud: *mut u8) {
 }
 
 extern fn on_pointer_lock_change(_: i32, ev: *const EmscriptenPointerlockChangeEvent, ud: *mut u8) -> i32 {
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	let ev = unsafe { &*ev };
 
 	ctx.on_capture_state_change(ev.active != 0);
@@ -227,7 +227,7 @@ extern fn on_pointer_lock_change(_: i32, ev: *const EmscriptenPointerlockChangeE
 }
 
 extern fn on_mouse_down(_: i32, ev: *const EmscriptenMouseEvent, ud: *mut u8) -> i32 {
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	if ctx.touch_enabled { return 0 }
 
 	let ev = unsafe { &*ev };
@@ -237,7 +237,7 @@ extern fn on_mouse_down(_: i32, ev: *const EmscriptenMouseEvent, ud: *mut u8) ->
 }
 
 extern fn on_mouse_up(_: i32, ev: *const EmscriptenMouseEvent, ud: *mut u8) -> i32 {
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	if ctx.touch_enabled { return 0 }
 
 	let ev = unsafe { &*ev };
@@ -247,7 +247,7 @@ extern fn on_mouse_up(_: i32, ev: *const EmscriptenMouseEvent, ud: *mut u8) -> i
 }
 
 extern fn on_mouse_move(_: i32, ev: *const EmscriptenMouseEvent, ud: *mut u8) -> i32 {
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	if ctx.touch_enabled { return 0 }
 
 	let ev = unsafe { &*ev };
@@ -261,7 +261,7 @@ extern fn on_key_down(_: i32, ev: *const EmscriptenKeyboardEvent, ud: *mut u8) -
 	use std::str;
 	use input::Button;
 
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	let ev = unsafe { &*ev };
 
 	if ev.key[1] == 0 {
@@ -296,7 +296,7 @@ extern fn on_key_up(_: i32, ev: *const EmscriptenKeyboardEvent, ud: *mut u8) -> 
 	use std::str;
 	use input::Button;
 
-	let mut ctx: &mut InputState = unsafe{ transmute(ud) };
+	let ctx: &mut InputState = unsafe{ transmute(ud) };
 	let ev = unsafe { &*ev };
 
 	if ev.key[1] == 0 {

@@ -145,7 +145,7 @@ impl Drop for Connection {
 extern fn on_open(fd: i32, ctx: *mut u8) {
 	use std::os::unix::io::FromRawFd;
 
-	let mut ctx: &mut Connection = unsafe{ transmute(ctx) };
+	let ctx: &mut Connection = unsafe{ transmute(ctx) };
 	ctx.stream = unsafe{ Some(TcpStream::from_raw_fd(fd)) };
 	ctx.event_queue.push(ConnectionEvent::Connect);
 }
@@ -174,7 +174,7 @@ extern fn on_close(_: i32, vctx: *mut u8) {
 extern fn on_message(_: i32, ctx: *mut u8) {
 	use std::io::Read;
 
-	let mut ctx: &mut Connection = unsafe{ transmute(ctx) };
+	let ctx: &mut Connection = unsafe{ transmute(ctx) };
 	if ctx.stream.is_none() { return }
 
 	let mut buf = [0u8; 8<<10];

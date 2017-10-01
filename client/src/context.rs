@@ -6,7 +6,7 @@ use connection::Connection;
 use input::InputState;
 
 use common::*;
-use ui::{self, InputTarget};
+// use ui::{self, InputTarget};
 
 use player::*;
 use level::*;
@@ -128,25 +128,26 @@ impl MainContext {
 		let right = Vec2::from_angle(self.player.yaw);
 		let fwd = Vec2::new(right.y,-right.x);
 
-		let mut vel = Vec2::zero();
+		self.player.vel = Vec2::zero();
 
 		if self.input_state.is_button_down(Button::Ascii('w')) {
-			vel = vel + fwd;
+			self.player.vel = self.player.vel + fwd;
 		}
 
 		if self.input_state.is_button_down(Button::Ascii('s')) {
-			vel = vel - fwd;
+			self.player.vel = self.player.vel - fwd;
 		}
 
 		if self.input_state.is_button_down(Button::Ascii('a')) {
-			vel = vel - right;
+			self.player.vel = self.player.vel - right;
 		}
 
 		if self.input_state.is_button_down(Button::Ascii('d')) {
-			vel = vel + right;
+			self.player.vel = self.player.vel + right;
 		}
 
-		self.player.pos = self.player.pos + vel * dt * 2.0;
+		self.player.update(dt);
+		self.player.collide_with_level(&self.level);
 
 		{	let eye_pos = self.player.pos.to_x0z() + Vec3::new(0.0, 1.2, 0.0);
 			let fwd = Vec3{
@@ -163,7 +164,7 @@ impl MainContext {
 				self.level.set_wall_cell(cell, !state);
 			}
 
-			let center = Level::cell_to_world(cell);
+			let center = Level::cell_to_world(cell).to_x0z();
 			let scalar = Level::get_tile_scalar();
 
 			let mut mb = MeshBuilder::new();

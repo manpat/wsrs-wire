@@ -21,8 +21,12 @@ impl Level {
 		Vec3::new(TILE_SIZE, TILE_HEIGHT, TILE_SIZE)
 	}
 
-	pub fn cell_to_world(pos: Vec2i) -> Vec3 {
-		(pos.to_vec2().to_x0z() + Vec3::new(0.5, 0.0, 0.5)) * Level::get_tile_scalar()
+	pub fn cell_to_world(pos: Vec2i) -> Vec2 {
+		(pos.to_vec2() + Vec2::splat(0.5)) * Vec2::splat(TILE_SIZE)
+	}
+
+	pub fn world_to_cell(pos: Vec2) -> Vec2 {
+		pos / Vec2::splat(TILE_SIZE)
 	}
 
 	pub fn in_bounds(pos: Vec2i) -> bool {
