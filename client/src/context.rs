@@ -205,6 +205,7 @@ impl MainContext {
 		}
 
 		self.level_geom.update(&self.level);
+		self.level.reset_dirty_flag();
 
 		self.input_state.flag_new_frame();
 	}

@@ -43,7 +43,6 @@ input
 	implement mobile fps controls
 
 physics
-	add player-level collision
 	add player-entity collision
 
 	implement raycasting for entities
@@ -76,3 +75,11 @@ rendering
 	ui
 		ui builder
 
+	investigate data packing for implementing gbuffers
+		f32 -> u8
+
+
+networking
+	sync players over network
+	serverside representation of levels
+	player travel between levels

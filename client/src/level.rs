@@ -8,13 +8,20 @@ pub const TILE_HEIGHT: f32 = 3.0 / 2.0 * TILE_SIZE;
 
 pub struct Level {
 	pub wall_layout: [bool; LEVEL_SIZE * LEVEL_SIZE],
+
+	dirty: bool,
 }
 
 impl Level {
 	pub fn new() -> Self {
 		Level {
 			wall_layout: [false; LEVEL_SIZE * LEVEL_SIZE],
+			dirty: true,
 		}
+	}
+
+	pub fn reset_dirty_flag(&mut self) {
+		self.dirty = false;
 	}
 
 	pub fn get_tile_scalar() -> Vec3 {
@@ -39,6 +46,7 @@ impl Level {
 
 		let idx = pos.x + pos.y * LEVEL_SIZE as i32;
 		self.wall_layout[idx as usize] = value;
+		self.dirty = true;
 	}
 
 	pub fn get_wall_cell(&self, pos: Vec2i) -> bool {
@@ -91,6 +99,8 @@ impl LevelGeometry {
 	pub fn update(&mut self, level: &Level) {
 		use rendering::mesh_builder::Vertex;
 		use rendering::types::Color;
+
+		if !level.dirty { return }
 
 		let scalar = Level::get_tile_scalar();
 
